@@ -258,40 +258,40 @@ def train_random_forest(X, y):
     return None
 
 
-# def clear_all():
-#     """清空会话状态和缓存"""
-#     # 清空会话状态
-#     for key in list(st.session_state.keys()):
-#         del st.session_state[key]
-    
-#     # 清空缓存（如果有使用）
-#     st.cache_data.clear()
-#     st.cache_resource.clear()
-
 def clear_all():
-    """清空会话状态和缓存（包括跨页面数据）"""
-    # 1. 获取当前会话的所有键
-    current_keys = list(st.session_state.keys())
+    """清空会话状态和缓存"""
+    # 清空会话状态
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
     
-    # 2. 保留必要的系统级键（可选）
-    keep_keys = ['_pages', '_session_id']  # Streamlit内部使用的键
-    
-    # 3. 删除非系统键
-    for key in current_keys:
-        if key not in keep_keys:
-            del st.session_state[key]
-    
-    # 4. 清空所有缓存
+    # 清空缓存（如果有使用）
     st.cache_data.clear()
     st.cache_resource.clear()
+
+# def clear_all():
+#     """清空会话状态和缓存（包括跨页面数据）"""
+#     # 1. 获取当前会话的所有键
+#     current_keys = list(st.session_state.keys())
     
-    # 5. 强制重置页面（可选）
-    st.rerun()
+#     # 2. 保留必要的系统级键（可选）
+#     keep_keys = ['_pages', '_session_id']  # Streamlit内部使用的键
+    
+#     # 3. 删除非系统键
+#     for key in current_keys:
+#         if key not in keep_keys:
+#             del st.session_state[key]
+    
+#     # 4. 清空所有缓存
+#     st.cache_data.clear()
+#     st.cache_resource.clear()
+    
+#     # 5. 强制重置页面（可选）
+#     st.rerun()
 
 def main():
     st.title("数据向量化")   
-    if st.button("重置所有数据"):
-        clear_all()
+    # if st.button("重置所有数据"):
+    #     clear_all()
     uploaded_file = st.file_uploader(
         "上传CSV文件",
         type=["csv"],
@@ -319,6 +319,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
