@@ -34,6 +34,7 @@ st.markdown("""
 
 st.markdown("[代码及实例数据的获取地址](https://github.com/guangpeng01/shujuchuli_xunlian)")
 
-st.markdown("##### 看的懂一下基础的python、pandas和numpy代码")
+st.markdown("##### 看的懂一些基础的python、pandas和numpy代码")
+
 
 st.markdown("""##### 求职岗位:数据岗 """)
