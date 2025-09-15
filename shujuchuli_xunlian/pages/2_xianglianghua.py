@@ -160,28 +160,6 @@ def feature_selection(df):
     return None, None
 
 
-# def auto_save_model(model):
-#     """自动保存模型到当前脚本所在目录"""
-#     try:
-#         # 获取当前脚本所在目录
-#         script_dir = os.path.dirname(os.path.abspath(__file__))
-        
-#         # 生成带时间戳的文件名
-#         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-#         filename = f"auto_model_{timestamp}.pkl"
-#         save_path = os.path.join(script_dir, filename)
-        
-#         # 保存模型
-#         with open(save_path, "wb") as file:
-#             pickle.dump(model, file)
-        
-#         st.success(f"✅ 模型已自动保存到: {save_path}")
-#         return True
-#     except Exception as e:
-#         st.error(f"❌ 自动保存失败: {str(e)}")
-#         return False
-
-
 
 def auto_save_model(model):
     """自动保存模型并提供明确的用户指引"""
@@ -199,24 +177,8 @@ def auto_save_model(model):
         with open(save_path, "wb") as file:
             pickle.dump(model, file)
         
-        # # 4. 显示完整的用户指引
-        # st.success("✅ 模型保存成功！")
-        
-        # # 显示文件信息卡片
-        # with st.expander("📁 模型文件信息", expanded=True):
-        #     col1, col2 = st.columns([1, 3])
-        #     with col1:
-        #         st.metric("保存位置", value="用户目录/auto_saved_models")
-        #     with col2:
-        #         st.code(f"完整路径: {save_path}")
-            
-        #     st.write("如何找到这个文件：")
-        #     st.markdown("""
-        #     - **Windows**: 打开文件资源管理器 → 输入路径 `%USERPROFILE%\auto_saved_models`
-        #     - **Mac/Linux**: 打开终端 → 运行 `open ~/auto_saved_models` 或 `cd ~/auto_saved_models`
-        #     """)
-        
-        # 5. 直接提供下载按钮
+
+        # 直接提供下载按钮
         with open(save_path, "rb") as file:
             st.download_button(
                 label="立即下载模型文件",
@@ -228,26 +190,6 @@ def auto_save_model(model):
         return True
     except Exception as e:
         st.error(f"❌ 保存失败: {str(e)}")
-        # st.error("请尝试以下解决方案：")
-        # st.markdown("""
-        # 1. 检查磁盘空间是否充足
-        # 2. 确保您有写入权限（特别是Linux/Mac系统）
-        # 3. 尝试手动指定保存位置：
-        # """)
-        
-        # # 添加手动选择路径的备用方案
-        # custom_path = st.text_input("或输入自定义保存路径（如：C:/models/）")
-        # if st.button("手动保存"):
-        #     if custom_path:
-        #         try:
-        #             os.makedirs(custom_path, exist_ok=True)
-        #             custom_save = os.path.join(custom_path, filename)
-        #             with open(custom_save, "wb") as f:
-        #                 pickle.dump(model, f)
-        #             st.success(f"手动保存成功！路径: {custom_save}")
-        #         except Exception as manual_error:
-        #             st.error(f"手动保存失败: {str(manual_error)}")
-        
         return False
 
 def train_random_forest(X, y):
@@ -316,20 +258,40 @@ def train_random_forest(X, y):
     return None
 
 
-def clear_all():
-    """清空会话状态和缓存"""
-    # 清空会话状态
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
+# def clear_all():
+#     """清空会话状态和缓存"""
+#     # 清空会话状态
+#     for key in list(st.session_state.keys()):
+#         del st.session_state[key]
     
-    # 清空缓存（如果有使用）
+#     # 清空缓存（如果有使用）
+#     st.cache_data.clear()
+#     st.cache_resource.clear()
+
+def clear_all():
+    """清空会话状态和缓存（包括跨页面数据）"""
+    # 1. 获取当前会话的所有键
+    current_keys = list(st.session_state.keys())
+    
+    # 2. 保留必要的系统级键（可选）
+    keep_keys = ['_pages', '_session_id']  # Streamlit内部使用的键
+    
+    # 3. 删除非系统键
+    for key in current_keys:
+        if key not in keep_keys:
+            del st.session_state[key]
+    
+    # 4. 清空所有缓存
     st.cache_data.clear()
     st.cache_resource.clear()
     
+    # 5. 强制重置页面（可选）
+    st.rerun()
 
 def main():
     st.title("数据向量化")   
-
+    if st.button("重置所有数据"):
+        clear_all()
     uploaded_file = st.file_uploader(
         "上传CSV文件",
         type=["csv"],
@@ -357,6 +319,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
